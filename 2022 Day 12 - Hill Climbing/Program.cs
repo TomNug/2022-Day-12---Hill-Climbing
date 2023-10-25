@@ -17,6 +17,20 @@ class Dijkstra
         return arr;
     }
 
+    public static int[,] SetAToDistanceZero(char[,] map, int[,] distances)
+    {
+        for (int i = 0; i < map.GetLength(0); i++)
+        {
+            for (int j = 0; j < map.GetLength(1); j++)
+            {
+                if (map[i, j] == 'a')
+                {
+                    distances[i, j] = 0;
+                }
+            }
+        }
+        return distances;
+    }
     // Choose the coordinate with the shortest distance from available nodes
     public static (int,int) ChooseCoordWithShortestDistance(int[,] distances, bool[,] visited)
     {
@@ -100,9 +114,12 @@ class Dijkstra
         distance[start.Item1, start.Item2] = 0;
         (int, int)[,] previous = new (int, int)[map.GetLength(0), map.GetLength(1)]; // to record previous node in quickest route to node
 
+        // 2* solution, set distances of any 'a' to zero
+        SetAToDistanceZero(map, distance);
+
         // Algorithm
 
-        
+
         // if -1,-1, no visitable nodes
         (int, int) currentCoord = ChooseCoordWithShortestDistance(distance, visited);
         while (currentCoord.Item1 != -1)
