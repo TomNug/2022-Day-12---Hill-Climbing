@@ -37,10 +37,10 @@ class Dijkstra
     }
 
     // Compares two coordinates on the grid, check if their characters are within one of each other
-    public static bool Reachable(char char1, char char2)
+    public static bool Reachable(char from, char to)
     {
         bool reachable = false;
-        if (Math.Abs(char1 - char2) <= 1)
+        if ((to - from) <=1)
         {
             reachable = true;
         }
@@ -113,10 +113,16 @@ class Dijkstra
             List <(int, int)> visitable = CalculateVisitableNodes(currentCoord, visited, map);
             foreach((int,int) nodeToVisit in visitable)
             {
-                // Adjust distance
-                distance[nodeToVisit.Item1, nodeToVisit.Item2] = currentDistance + 1;
-                // Adjust previous
-                previous[nodeToVisit.Item1, nodeToVisit.Item2] = currentCoord;
+                // Check if there's a new best distance
+                int possibleDistance = distance[nodeToVisit.Item1, nodeToVisit.Item2] = currentDistance + 1;
+                if (possibleDistance < distance[nodeToVisit.Item1, nodeToVisit.Item2])
+                {
+                    // Adjust distance
+                    distance[nodeToVisit.Item1, nodeToVisit.Item2] = possibleDistance;
+                    // Adjust previous
+                    previous[nodeToVisit.Item1, nodeToVisit.Item2] = currentCoord;
+                }
+                
             }
             // Mark visited
             visited[currentCoord.Item1, currentCoord.Item2] = true;
@@ -133,7 +139,7 @@ class Program
 {
     private static int CreateMapAndSolve(string[] instructions)
     {
-        char[,] map = new char[5,8];
+        char[,] map = new char[instructions.Length, instructions[0].Length];
         (int, int) start = (0, 0);
         (int, int) end = (0, 0);
 
@@ -177,9 +183,9 @@ class Program
     {
         
         string pathTest = @"C:\Users\Tom\Documents\Advent\2022 Day 12 - Hill Climbing\2022 Day 12 - Hill Climbing\data_test.txt";
-        //string pathFull = @"C:\Users\Tom\Documents\ASPNET Projects\2022- Day 11 - Monkeys\2022- Day 11 - Monkeys\data_full.txt";
+        string pathFull = @"C:\Users\Tom\Documents\Advent\2022 Day 12 - Hill Climbing\2022 Day 12 - Hill Climbing\data_full.txt";
 
-        string[] instructions = System.IO.File.ReadAllLines(pathTest);
+        string[] instructions = System.IO.File.ReadAllLines(pathFull);
 
         int shortestDistance = CreateMapAndSolve(instructions);
         //PrintMap(map);
